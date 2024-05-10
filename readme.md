@@ -57,10 +57,12 @@ Berikut adalah daftar endpoint yang tersedia beserta Method HTTP yang dapat digu
   Authorization: Bearer soltarine-tek59
 
   {
+  "soltarine_data": {
     "battery": {
       "percentage": 80
     }
   }
+}
   ```
 - **Contoh Respon (GET):**
   ```json

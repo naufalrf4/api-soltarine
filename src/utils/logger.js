@@ -1,7 +1,7 @@
 const { createLogger, transports, format } = require('winston');
 const path = require('path');
 
-const logsDirectory = path.join(__dirname, '..', 'logs');
+const logsDirectory = path.join(__dirname, '..', '..', 'logs'); 
 
 const logger = createLogger({
     transports: [
