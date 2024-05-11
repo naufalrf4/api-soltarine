@@ -1,4 +1,4 @@
-const { getDatabase, ref } = require("firebase/database");
+const { getDatabase, ref, get } = require("firebase/database");
 const { initializeApp } = require("firebase/app");
 
 const initializeFirebaseApp = (config) => {
@@ -13,8 +13,18 @@ const getDataRef = (path) => {
     return ref(getDatabaseReference(), path);
 };
 
+const getDataSnapshot = async (databaseRef) => {
+    try {
+        const snapshot = await get(databaseRef);
+        return snapshot;
+    } catch (error) {
+        throw error;
+    }
+};
+
 module.exports = {
     initializeFirebaseApp,
     getDatabaseReference,
-    getDataRef
+    getDataRef,
+    getDataSnapshot
 };

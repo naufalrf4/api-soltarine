@@ -44,10 +44,9 @@ const firebaseApp = firebaseService.initializeFirebaseApp({
     appId: process.env.FIREBASE_APP_ID
 });
 
-const database = firebaseService.getDatabaseReference(firebaseApp);
 
 app.get('/', (req, res) => {
-    res.send('Halo, ini API Soltarine');
+    res.send(`Halo, ini adalah API Soltarine. Silahkan kunjungi <a href="/api/data">/api/data</a> untuk mendapatkan data`);
 });
 
 app.get('/api/data', apiLimiter, dataController.getData);
@@ -56,7 +55,7 @@ app.put('/api/data', apiLimiter, authenticateToken, dataController.updateData);
 app.use(errorMiddleware);
 
 const server = app.listen(port, () => {
-    logger.info(`Server berjalan di http://localhost:${port}`);
+    logger.info(`API ${process.env.APP_NAME} berjalan di http://localhost:${port}`);
     logger.info('Gunakan CTRL + C untuk menghentikan server.');
 });
 
@@ -72,9 +71,9 @@ server.on('error', (err) => {
 
 
 process.on('SIGINT', () => {
-    logger.info('Server shutting down gracefully...');
+    logger.info('Server sedang dihentikan...');
     server.close(() => {
-        logger.info('Server stopped.');
+        logger.info('Server telah dihentikan.');
         process.exit(0);
     });
 });

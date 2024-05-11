@@ -1,38 +1,60 @@
 const { onValue, ref, update } = require("firebase/database");
-const firebaseService = require('../services/firebaseService');
-const logger = require('../utils/logger');
+const firebaseService = require("../services/firebaseService");
+const logger = require("../utils/logger");
 
 const getData = (req, res) => {
-    onValue(firebaseService.getDataRef('/soltarine_data'), (snapshot) => {
-        const data = snapshot.val();
-        logger.info('Mendapatkan data:', data);
-        res.json(data);
-    }, {
-        onlyOnce: true
+  onValue(
+    firebaseService.getDataRef("/"),
+    (snapshot) => {
+      const data = snapshot.val();
+      logger.info("Mendapatkan data:", data);
+      res.json(data);
+    },
+    {
+      onlyOnce: true,
+    }
+  );
+};
+
+const updateData = (req, res) => {
+  const newData = req.body;
+  const allowedKeys = [
+    "battery",
+    "current",
+    "efficiency",
+    "energy_production",
+    "temperature",
+  ];
+
+  const filteredData = Object.keys(newData)
+    .filter((key) => allowedKeys.includes(key))
+    .reduce((obj, key) => {
+      obj[key] = newData[key];
+      return obj;
+    }, {});
+
+  const unauthorizedKeys = Object.keys(newData).filter(
+    (key) => !allowedKeys.includes(key)
+  );
+  if (unauthorizedKeys.length > 0) {
+    logger.warn("Key tidak diizinkan:", unauthorizedKeys);
+    return res
+      .status(400)
+      .json({ message: "Data tidak diizinkan", unauthorizedKeys });
+  }
+
+  update(firebaseService.getDataRef("/"), filteredData)
+    .then(() => {
+      logger.info("Data berhasil diupdate:", filteredData);
+      res.json({ message: "Data berhasil diupdate" });
+    })
+    .catch((error) => {
+      logger.error("Gagal mengupdate data:", error);
+      res.status(500).json({ message: "Gagal mengupdate data" });
     });
 };
 
-const updateData = async (req, res) => {
-    const newData = req.body.soltarine_data;
-
-    if (!newData) {
-        logger.error('Bad Request: Data yang diberikan tidak valid.');
-        return res.status(400).send('Bad Request: Data yang diberikan tidak valid.');
-    }
-
-    try {
-        await update(firebaseService.getDataRef('/soltarine_data'), newData);
-        const timestamp = new Date().toISOString();
-        const logMessage = `${timestamp}: Data berhasil diperbarui di Firebase: ${JSON.stringify(newData)}\n`;
-        logger.info(logMessage);
-        res.send('Data berhasil diperbarui di Firebase.');
-    } catch (error) {
-        logger.error('Terjadi kesalahan saat memperbarui data di Firebase:', error);
-        res.status(500).send('Terjadi kesalahan saat memperbarui data di Firebase.');
-    }
-};
-
 module.exports = {
-    getData,
-    updateData
+  getData,
+  updateData,
 };

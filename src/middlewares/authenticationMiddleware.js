@@ -4,6 +4,7 @@ const authenticateToken = (req, res, next) => {
     if (token === process.env.ACCESS_TOKEN) {
         next();
     } else {
+        res.send('Akses Token diperlukan');
         res.sendStatus(401);
     }
 };
