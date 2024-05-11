@@ -1,18 +1,17 @@
 {
-    "soltarine_data": {
-      "battery": {
-        "percentage": 75,
-        "remaining": 0.5,
-        "charging_time": 2.5,
-        "used_percentage": 0.25
-      },
-      "current": {
-        "voltage": 12,
-        "ampere": 5
-      },
-      "energy_production": 100,
-      "temperature": 25,
-      "efficiency": 90
-    }
+  "soltarine_data": {
+    "battery": {
+      "percentage": 75,
+      "remaining": 0.5,
+      "charging_time": 2.5,
+      "used_percentage": 0.25
+    },
+    "current": {
+      "voltage": 12,
+      "ampere": 5
+    },
+    "energy_production": 100,
+    "temperature": 25,
+    "efficiency": 90
   }
-  
+}
