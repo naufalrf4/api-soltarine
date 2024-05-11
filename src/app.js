@@ -1,6 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const morgan = require("morgan");
+const cors = require("cors");
 const fs = require("fs");
 const path = require("path");
 const winston = require("winston");
@@ -42,6 +43,9 @@ const loggerWinston = winston.createLogger({
 
 app.use(morgan("combined", { stream: accessLogStream }));
 app.use(express.json());
+app.use(cors({
+  origin: "*", 
+}));
 
 const firebaseApp = firebaseService.initializeFirebaseApp({
   apiKey: process.env.FIREBASE_API_KEY,
