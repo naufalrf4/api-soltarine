@@ -19,11 +19,11 @@ const getData = (req, res) => {
 const updateData = (req, res) => {
   const newData = req.body;
   const allowedKeys = [
-    "battery",
+    "voltage",
+    "power",
+    "energy",
     "current",
-    "efficiency",
-    "energy_production",
-    "temperature",
+    "ldr_light"
   ];
 
   const filteredData = Object.keys(newData)
@@ -43,7 +43,10 @@ const updateData = (req, res) => {
       .json({ message: "Data tidak diizinkan", unauthorizedKeys });
   }
 
-  update(firebaseService.getDataRef("/"), filteredData)
+  const timestamp = Date.now();
+  const updatePath = `/data/${timestamp}`;
+  
+  update(firebaseService.getDataRef(updatePath), filteredData)
     .then(() => {
       logger.info("Data berhasil diupdate:", filteredData);
       res.json({ message: "Data berhasil diupdate" });

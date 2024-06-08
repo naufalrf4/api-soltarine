@@ -6,10 +6,9 @@ const fs = require("fs");
 const path = require("path");
 const winston = require("winston");
 
-const dataController = require("./controllers/dataController");
-const authenticateToken = require("./middlewares/authenticationMiddleware");
+const apiRouter = require("./routes/api"); // Import the API router
+
 const errorMiddleware = require("./middlewares/errorMiddleware");
-const apiLimiter = require("./middlewares/rateLimitMiddleware");
 const firebaseService = require("./services/firebaseService");
 const logger = require("./utils/logger");
 
@@ -63,8 +62,8 @@ app.get("/", (req, res) => {
   );
 });
 
-app.get("/api/data", apiLimiter, dataController.getData);
-app.put("/api/data", apiLimiter, authenticateToken, dataController.updateData);
+// Use the API router for routes under the /api prefix
+app.use("/api", apiRouter);
 
 app.use(errorMiddleware);
 
